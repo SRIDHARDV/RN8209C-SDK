@@ -1,20 +1,24 @@
 /*************************************************************************
 *   	Copyright 2019-2021  MOKO TECHNOLOGY LTD
 *
-*	Licensed under the Apache License, Version 2.0 (the "License");   
-*	you may not use this file except in compliance with the License.   
-*	You may obtain a copy of the License at  
+*	Licensed under the Apache License, Version 2.0 (the "License");
+*	you may not use this file except in compliance with the License.
+*	You may obtain a copy of the License at
 *
-*	http://www.apache.org/licenses/LICENSE-2.0   
+*	http://www.apache.org/licenses/LICENSE-2.0
 *
-*	Unless required by applicable law or agreed to in writing, software   
-*	distributed under the License is distributed on an "AS IS" BASIS,   
-*	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.   
-*	See the License for the specific language governing permissions and   
+*	Unless required by applicable law or agreed to in writing, software
+*	distributed under the License is distributed on an "AS IS" BASIS,
+*	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*	See the License for the specific language governing permissions and
 *	limitations under the License.
 **************************************************************************/
 #ifndef RN8209_U_H__
 #define RN8209_U_H__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include "string.h"
 #include <stdio.h>
@@ -67,7 +71,7 @@
 #define         REG_EnergyP2 		0x2a
 #define         REG_EnergyD  		0x2b
 #define         REG_EnergyD2    	0x2c
-#define         REG_EMUStatus   	0x2d	//???锟斤拷??锟斤拷??锟斤拷
+#define         REG_EMUStatus   	0x2d	//
 #define         REG_SPL_IA      	0x30
 #define         REG_SPL_IB      	0x31
 #define         REG_SPL_U       	0x32
@@ -103,54 +107,54 @@ typedef void (*rn8209c_tx_pin_reset_fun)(void);
 
 typedef struct
 {
-    float power_start;  //启动功率
-    uint32_t EC;  //脉冲常数
-    float KV;  //分压系数
-    uint32_t  R;  //电流电阻
-    uint16_t GPQA;    //A通道功率增益校正-----------------
-    uint16_t GPQB;    //B通道功率增益校正
-    uint8_t  PhsA;    //A通道相位校正--------------------------
-    uint8_t  PhsB;    //B通道相位校正
-    uint16_t Cst_QPhsCal; //无功相位校正------------------------
-    uint16_t APOSA;   //A通道有功功率offset校正--------------------
-    uint16_t APOSB;   //B通道有功功率offset校正
-    uint16_t RPOSA;   //A通道无功功率offset校正
-    uint16_t RPOSB;   //B通道无功功率offset校正
-    uint16_t IARMSOS; //A通道电流有效值offset校正------------------
-    uint16_t IBRMSOS; //B通道电流有效值offset校正
-    uint16_t IBGain;  //B通道电流增益
+    float power_start;
+    uint32_t EC;
+    float KV;
+    uint32_t  R;
+    uint16_t GPQA;
+    uint16_t GPQB;
+    uint8_t  PhsA;
+    uint8_t  PhsB;
+    uint16_t Cst_QPhsCal;
+    uint16_t APOSA;
+    uint16_t APOSB;
+    uint16_t RPOSA;
+    uint16_t RPOSB;
+    uint16_t IARMSOS;
+    uint16_t IBRMSOS;
+    uint16_t IBGain;
 
-    uint32_t Ku;//电压比例-----------------
-    uint32_t Kia;//--------------------
+    uint32_t Ku;
+    uint32_t Kia;
     uint32_t Kib;
-    uint16_t deviation;//误差
+    uint16_t deviation;
 }__attribute__((packed)) STU_8209C;
 
-  
+
 
 //extern STU_8209C Stu8209c;
 bool rn8209c_init( rn8209c_delay_ms_fun delay,\
                   rn8209c_uart_tx_fun uart_tx,\
                   rn8209c_uart_rx_fun uart_rx,\
                   rn8209c_tx_pin_reset_fun tx_pin_reset,\
-                  STU_8209C param);/*接口初始化*/
+                  STU_8209C param);/*锟接口筹拷始锟斤拷*/
 
 
 uint8_t rn8209c_init_para( void);
 
-uint8_t rn8209c_read_voltage(uint32_t *vol);/*扩大1000倍*/
-uint8_t rn8209c_read_current(uint8_t phase,uint32_t *current);/* 扩大10000倍*/
-uint8_t rn8209c_read_power(uint8_t phase,uint32_t *p);/*扩大10000倍*/
-uint8_t rn8209c_read_power_energy(uint8_t phase,uint32_t *p); /*扩大1000倍*/
-uint8_t rn8209c_read_power_Q(uint8_t phase,uint32_t *p);/*扩大10000*/
+uint8_t rn8209c_read_voltage(uint32_t *vol);
+uint8_t rn8209c_read_current(uint8_t phase,uint32_t *current);
+uint8_t rn8209c_read_power(uint8_t phase,uint32_t *p);
+uint8_t rn8209c_read_power_energy(uint8_t phase,uint32_t *p);
+uint8_t rn8209c_read_power_Q(uint8_t phase,uint32_t *p);
 uint8_t rn8209c_read_emu_status(void);
 
-void rn8209c_calibrate_voltage_current(uint8_t phase,uint32_t voltage_real,uint32_t current_real );  /*1.0 将校表台电压设置220V,5A, 1.0功率校准*/
-void rn8209c_calibrate_power_k(uint8_t phase,uint32_t ku,uint32_t ki);/*2.0 将校表台电压设置220V,5A, 1.0功率校准*/
-void rn8209c_calibrate_phs(uint8_t phase,uint32_t power_ref);/* 3 .0 将校表台电压设置220V,5A，0.5L*/
-void rn8209c_calibrate_power_offset(uint8_t phase,uint32_t power_ref);/* 4.0 5% Ib 功率Offset校正 将校表台电压设置220V,0.25A,1.0 */
-void rn8209c_calibrate_power_Q(uint8_t phase,uint32_t power_q_ref);/*5.0 将校表台电压设置220V,16A, 0.5无功校准*/
-void rn8209c_calibrate_current_offset(uint8_t phase) ;/*6.0 电流Offset校正将校表台电压设置220V,0A,1.0，只提供电压*/
+void rn8209c_calibrate_voltage_current(uint8_t phase,uint32_t voltage_real,uint32_t current_real );
+void rn8209c_calibrate_power_k(uint8_t phase,uint32_t ku,uint32_t ki);
+void rn8209c_calibrate_phs(uint8_t phase,uint32_t power_ref);
+void rn8209c_calibrate_power_offset(uint8_t phase,uint32_t power_ref);
+void rn8209c_calibrate_power_Q(uint8_t phase,uint32_t power_q_ref);
+void rn8209c_calibrate_current_offset(uint8_t phase) ;
 
 STU_8209C read_stu8209c_calibrate_param(void);
 void rn8209c_calibrate_power_k_phase_a(void);
@@ -158,25 +162,8 @@ void rn8209c_calibrate_power_k_phase_b(void);
 uint8_t rn8209c_read_energy(uint32_t *energy);
 extern  float  kp;
 
+#ifdef __cplusplus
+}
 #endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#endif
